@@ -4,7 +4,10 @@ namespace Webshr\CustomAPI;
 
 class SettingsPage {
 
-    public function __construct() {
+    private $data_encryption;
+
+    public function __construct( DataEncryption $data_encryption ) {
+        $this->data_encryption = $data_encryption;
         add_action('admin_menu', [$this, 'register_api_settings_page']);
         add_action('admin_post_external_api', [$this, 'submit_api_key']);
     }
@@ -22,12 +25,8 @@ class SettingsPage {
  
     // The admin page containing the form
     public function add_api_keys_callback() {
-        $data_encryption = new DataEncryption();
-        $api_key = get_option('api_key');
 
-        if($api_key) {
-            $api_key = $data_encryption->decrypt($api_key);
-        }
+        $api_key = $this->data_encryption->decrypt(get_option('api_key', ''));
 
         ?>
         <div class="wrap">
@@ -62,19 +61,18 @@ class SettingsPage {
         check_admin_referer('api_options_verify');
     
         if (isset($_POST['api_key'])) {
-            $data_encryption = new DataEncryption();
             $submitted_api_key = sanitize_text_field($_POST['api_key']);
-            $api_key = $data_encryption->encrypt($submitted_api_key);
-    
+            $api_key = $this->data_encryption->encrypt($submitted_api_key);
+
             $api_exists = get_option('api_key');
     
             if (!empty($api_key) && !empty($api_exists)) {
-                update_option('api_key', $api_key);
+                update_option('api_key', $api_key, 'no');
             } else {
                 add_option('api_key', $api_key);
             }
         }
         // Redirect to same page with status=1 to show our options updated banner
-        wp_redirect($_SERVER['HTTP_REFERER'] . '&status=1');
+        wp_redirect(wp_get_referer() . '&status=1');
     }
 }

@@ -27,31 +27,19 @@ use Webshr\CustomAPI\SettingsPage;
 use Webshr\CustomAPI\RestEndpoint;
 
 // Setup
-define('WEBSHRAPIKEY_DIR', plugin_dir_path(__FILE__));
-define('WEBSHRAPIKEY_FILE', __FILE__);
-
 define( 'PLUGIN_PATH', plugin_dir_path( __FILE__ ));
 define( 'PLUGIN_URL', plugin_dir_url( __FILE__ ));
 define( 'PLUGIN', plugin_basename( __FILE__ ));
 
-// Includes
-
-// $rootFiles = glob(WEBSHRAPIKEY_DIR . 'includes/*.php');
-// $subdirectoryFiles = glob(WEBSHRAPIKEY_DIR . 'includes/**/*.php');
-// $allFiles = array_merge($rootFiles, $subdirectoryFiles);
-
-// foreach($allFiles as $filename) {
-//   include_once($filename);
-// }
-
-
+// Initializes the plugin by creating instances of the DataEncryption, SettingsPage and RestEndpoint classes.
 function plugin_init() {
-  $settingsPage = new SettingsPage();
+  $data_encryption = new DataEncryption();
+  $settings_page = new SettingsPage($data_encryption);
   $APIEndpoint = new RestEndpoint();
 
-  // Fire hooks
-  add_action('admin_menu', [$settingsPage, 'register_api_settings_page']);
-  add_action('admin_post_external_api', [$settingsPage, 'submit_api_key']);
+  // Fire hooks to register the API settings page and submit the API key.
+  add_action('admin_menu', [$settings_page, 'register_api_settings_page']);
+  add_action('admin_post_external_api', [$settings_page, 'submit_api_key']);
 }
 
 add_action('plugins_loaded', __NAMESPACE__ . '\\plugin_init');
