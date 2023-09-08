@@ -2,7 +2,7 @@
 
 namespace Webshr\CustomAPI;
 /**
- * Class fsdapikey_DataEncryption
+ * Class DataEncryption
  */
 
 /**
@@ -13,7 +13,7 @@ class DataEncryption {
 	/**
 	 * Key to use for encryption.
 	 *
-	 * @since 1.0.0
+	 * @since 0.0.1
 	 * @var string
 	 */
 	private $key;
@@ -21,7 +21,7 @@ class DataEncryption {
 	/**
 	 * Salt to use for encryption.
 	 *
-	 * @since 1.0.0
+	 * @since 0.0.1
 	 * @var string
 	 */
 	private $salt;
@@ -29,7 +29,7 @@ class DataEncryption {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 * @since 0.0.1
 	 */
 	public function __construct() {
 		$this->key  = $this->get_default_key();
@@ -41,7 +41,7 @@ class DataEncryption {
 	 *
 	 * If a user-based key is set, that key is used. Otherwise the default key is used.
 	 *
-	 * @since 1.0.0
+	 * @since 0.0.1
 	 *
 	 * @param string $value Value to encrypt.
 	 * @return string|bool Encrypted value, or false on failure.
@@ -68,7 +68,7 @@ class DataEncryption {
 	 *
 	 * If a user-based key is set, that key is used. Otherwise the default key is used.
 	 *
-	 * @since 1.0.0
+	 * @since 0.0.1
 	 *
 	 * @param string $raw_value Value to decrypt.
 	 * @return string|bool Decrypted value, or false on failure.
@@ -97,7 +97,7 @@ class DataEncryption {
 	/**
 	 * Gets the default encryption key to use.
 	 *
-	 * @since 1.0.0
+	 * @since 0.0.1
 	 *
 	 * @return string Default (not user-based) encryption key.
 	 */
@@ -113,7 +113,7 @@ class DataEncryption {
 	/**
 	 * Gets the default encryption salt to use.
 	 *
-	 * @since 1.0.0
+	 * @since 0.0.1
 	 *
 	 * @return string Encryption salt.
 	 */

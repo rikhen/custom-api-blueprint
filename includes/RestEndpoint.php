@@ -10,7 +10,11 @@ class RestEndpoint {
         add_action('rest_api_init', [$this, 'register_api_endpoint']);
     }
 
-    // API Endpoint
+    /**
+     * Registers the API endpoint for fetching data from an external API.
+     *
+     * @return void
+     */
     public function register_api_endpoint() {
         register_rest_route('webshr/v1', '/fetch-external-api', array(
             'methods' => 'POST',
@@ -19,17 +23,27 @@ class RestEndpoint {
         ));
     }
 
+    /**
+     * Callback function for the API endpoint.
+     *
+     * @param array $req The request object.
+     *
+     * @return WP_Error|WP_REST_Response Returns an error if the API key is empty or cURL request fails. Otherwise, returns the response from the external API.
+     */
     function fetch_external_api_data($req) {
 
     $example_value = $req["exampleValue"];
     $data_encryption = new DataEncryption();
+
+     // Decrypt the API key stored in WordPress options
     $api_key = $data_encryption->decrypt(get_option( 'api_key' ));
 
+     // Check if API key is empty and return an error if it is
     if(empty($api_key)){
         return new WP_Error( 'error', 'Please enter an API key in settings to use this feature', array( 'status' => 403 ) );
     }
 
-    // You can enable this to test the API is properly stored. DO NOT leave this uncommented on production
+    // Test mode - returns the decrypted API key as a response. DO NOT leave this uncommented on production
      $test_mode = $req["testMode"];
      if($test_mode){
         $res = new WP_REST_Response("Your API key is: {$api_key}");
@@ -40,6 +54,7 @@ class RestEndpoint {
 
     $curl = curl_init();
 
+    // Make a cURL request to external API using the decrypted API key
     curl_setopt_array($curl, [
         // URL for example purposes only, this request will fail as-is even if API key valid - replace with your own request
         CURLOPT_URL => "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key={$api_key}&option={$example_value}",
@@ -57,6 +72,7 @@ class RestEndpoint {
     
     curl_close($curl);
     
+    // Return an error if cURL request fails
     if ($err) {
 
         return new WP_Error( 'error', 'Invalid Request', array( 'status' => 404 ) );

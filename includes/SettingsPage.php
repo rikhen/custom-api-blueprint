@@ -12,20 +12,25 @@ class SettingsPage {
         add_action('admin_post_external_api', [$this, 'submit_api_key']);
     }
 
+    /**
+     * Registers an API settings page in the WordPress admin dashboard.
+     */
     public function register_api_settings_page() {
         add_submenu_page(
-            'tools.php', // Add our page under the "Tools" menu
+            'tools.php', // Parent slug
             'API Keys', // Title in menu
             'API Keys', // Page title
-            'manage_options', // permissions
-            'api-keys', // slug for our page
+            'manage_options', // Permissions required to view this page
+            'api-keys', // Slug for our page
             [$this, 'add_api_keys_callback'] // Callback to render the page
         );
     }
  
-    // The admin page containing the form
+    /**
+     * Callback function for the admin page containing the API key form.
+     */
     public function add_api_keys_callback() {
-
+        // Decrypt the API key from the database
         $api_key = $this->data_encryption->decrypt(get_option('api_key', ''));
 
         ?>
@@ -50,22 +55,27 @@ class SettingsPage {
         <?php
     }
 
-    // Submit functionality
+    /**
+     * Handles the submission of an API key.
+     */
     public function submit_api_key() {
         // Make sure user actually has the capability to edit the options
         if (!current_user_can('edit_theme_options')) {
             wp_die("You do not have permission to view this page.");
         }
     
-        // pass in the nonce ID from our form's nonce field - if the nonce fails this will kill script
+        // Verify the nonce to ensure the request came from our form
         check_admin_referer('api_options_verify');
     
+        // If an API key was submitted, sanitize it and encrypt it
         if (isset($_POST['api_key'])) {
             $submitted_api_key = sanitize_text_field($_POST['api_key']);
             $api_key = $this->data_encryption->encrypt($submitted_api_key);
 
+            // Check if an API key already exists in the database
             $api_exists = get_option('api_key');
     
+            // If an API key exists, update it. Otherwise, add a new option.
             if (!empty($api_key) && !empty($api_exists)) {
                 update_option('api_key', $api_key, 'no');
             } else {
