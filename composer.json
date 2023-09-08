@@ -1,0 +1,18 @@
+{
+    "name": "webshr/custom-api",
+    "description": "A boilerplate for a custom API WordPress plugin",
+    "type": "wordpress-plugin",
+    "autoload": {
+        "psr-4": {
+            "Webshr\\CustomAPI\\": "includes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "H.Liebel",
+            "email": "mail@henrikliebel.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}

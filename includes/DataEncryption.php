@@ -2,13 +2,13 @@
 
 namespace Webshr\CustomAPI;
 /**
- * Class fsdapikey_Data_Encryption
+ * Class fsdapikey_DataEncryption
  */
 
 /**
  * Class responsible for encrypting and decrypting data.
  */
-class Data_Encryption {
+class DataEncryption {
 
 	/**
 	 * Key to use for encryption.

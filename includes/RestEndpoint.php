@@ -4,7 +4,7 @@ namespace Webshr\CustomAPI;
 use WP_Error;
 use WP_REST_Response;
 
-class REST_Endpoint {
+class RestEndpoint {
 
     public function __construct() {
         add_action('rest_api_init', [$this, 'register_api_endpoint']);
@@ -22,7 +22,7 @@ class REST_Endpoint {
     function fetch_external_api_data($req) {
 
     $example_value = $req["exampleValue"];
-    $data_encryption = new Data_Encryption();
+    $data_encryption = new DataEncryption();
     $api_key = $data_encryption->decrypt(get_option( 'api_key' ));
 
     if(empty($api_key)){

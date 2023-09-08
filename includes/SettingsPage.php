@@ -2,7 +2,7 @@
 
 namespace Webshr\CustomAPI;
 
-class Settings_page {
+class SettingsPage {
 
     public function __construct() {
         add_action('admin_menu', [$this, 'register_api_settings_page']);
@@ -22,7 +22,7 @@ class Settings_page {
  
     // The admin page containing the form
     public function add_api_keys_callback() {
-        $data_encryption = new Data_Encryption();
+        $data_encryption = new DataEncryption();
         $api_key = get_option('api_key');
 
         if($api_key) {
@@ -62,7 +62,7 @@ class Settings_page {
         check_admin_referer('api_options_verify');
     
         if (isset($_POST['api_key'])) {
-            $data_encryption = new Data_Encryption();
+            $data_encryption = new DataEncryption();
             $submitted_api_key = sanitize_text_field($_POST['api_key']);
             $api_key = $data_encryption->encrypt($submitted_api_key);
     
